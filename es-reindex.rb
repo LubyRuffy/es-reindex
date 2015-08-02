@@ -157,11 +157,9 @@ while true do
     bulk << Oj.dump({bulk_op => base}) + "\n"
 
     source = doc['_source']
-    source["header"] = ''
-    source["body"] = ''
     source["lastupdatetime"] = source["lastupdatetime"][0..18] if source["lastupdatetime"] && source["lastupdatetime"].size>19
     source["lastchecktime"] = source["lastchecktime"][0..18] if source["lastchecktime"] && source["lastchecktime"].size>19
-    puts Oj.dump(source)
+    #puts Oj.dump(source)
     bulk << Oj.dump(source) + "\n"
     done += 1
   end
