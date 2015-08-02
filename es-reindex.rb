@@ -51,13 +51,14 @@ surl, durl, sidx, didx = '', '', '', ''
     idx.replace param
   end
 end
-printf "Copying '%s/%s' to '%s/%s'%s\n  Confirm or hit Ctrl-c to abort...\n",
+printf "Copying '%s/%s' to '%s/%s'%s\n",
   surl, sidx, durl, didx,
   remove ?
     ' with rewriting destination mapping!' :
     update ? ' with updating existing documents!' : '.'
 
-$stdin.readline
+# printf "Confirm or hit Ctrl-c to abort...\n"
+# $stdin.readline
 
 def tm_len l
   t = []
@@ -74,6 +75,7 @@ end
 def retried_request method, url, data=nil
   while true
     begin
+      #puts method, url, data
       return data ?
         RestClient.send(method, url, data) :
         RestClient.send(method, url)
@@ -153,7 +155,14 @@ while true do
       base[doc_arg] = doc[doc_arg] if doc.key? doc_arg
     }
     bulk << Oj.dump({bulk_op => base}) + "\n"
-    bulk << Oj.dump(doc['_source']) + "\n"
+
+    source = doc['_source']
+    source["header"] = ''
+    source["body"] = ''
+    source["lastupdatetime"] = source["lastupdatetime"][0..18] if source["lastupdatetime"] && source["lastupdatetime"].size>19
+    source["lastchecktime"] = source["lastchecktime"][0..18] if source["lastchecktime"] && source["lastchecktime"].size>19
+    puts Oj.dump(source)
+    bulk << Oj.dump(source) + "\n"
     done += 1
   end
   unless bulk.empty?
