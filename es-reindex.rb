@@ -146,6 +146,7 @@ while true do
   data = Oj.load data
   break if data['hits']['hits'].empty?
   scroll_id = data['_scroll_id']
+  puts  scroll_id
   bulk = ''
   data['hits']['hits'].each do |doc|
     ### === implement possible modifications to the document
