@@ -54,7 +54,7 @@ end
 
 dst = nil
 durl, didx = '', ''
-bulk_op = 'index'
+bulk_op = 'update'
 total = 0
 t, done = Time.now, 0
 frame = 1000
@@ -112,12 +112,14 @@ while true do
 
     source = doc['_source']
     #puts Oj.dump(source)
-    bulk << Oj.dump(source) + "\n"
+    bulk << '{"doc" : ' + Oj.dump(source) + "}\n"
     done += 1
   end
   unless bulk.empty?
     bulk << "\n" # empty line in the end required
+    #puts bulk
     retried_request :post, "#{durl}/_bulk", bulk
+    #exit
   end
 
   eta = total * (Time.now - t) / done
