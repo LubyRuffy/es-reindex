@@ -57,6 +57,7 @@ durl, didx = '', ''
 bulk_op = 'index'
 total = 0
 t, done = Time.now, 0
+frame = 1000
 
 while ARGV[0]
   case arg = ARGV.shift
@@ -95,7 +96,7 @@ while true do
       }
     }
   },
-  "size": 1000
+  "size": #{frame}
 }
       |)
   data = Oj.load data
